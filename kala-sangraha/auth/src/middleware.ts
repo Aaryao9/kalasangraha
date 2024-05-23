@@ -6,7 +6,7 @@ export function middleware(request: NextRequest) {
     console.log("middleware")
 
     const path = request.nextUrl.pathname;
-    const token = request.cookies.get('token')?.value||false;
+    const token = request.cookies.get('jwt')?.value||false;
 
     if(!token && path === '/profile') {
         console.log("redirecting to login")

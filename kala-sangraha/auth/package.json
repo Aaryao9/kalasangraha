@@ -13,6 +13,7 @@
     "bcryptjs": "^2.4.3",
     "bootstrap": "^5.3.3",
     "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.379.0",
     "mongoose": "^8.3.2",
     "next": "14.2.2",
     "nodemailer": "^6.9.13",
