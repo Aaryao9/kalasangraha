@@ -173,32 +173,7 @@ class cartView(APIView):
             })
         return Response(data)
     
-    def post(self, request):
-        token = request.GET.get('jwt',None)
-        if not token:
-            return Response({'error': 'not authenticated'})
-        try:
-            payload = jwt.decode(token, 'SECRET', algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            return Response({'error': 'expired'})
-        except jwt.InvalidTokenError:
-            return Response({'error': 'invalid'})
-        user = User.objects.filter(id=payload['id']).first()
-        product_id = request.data.get('product_id')
-        quantity = request.data.get('quantity')
-        product = Product.objects.filter(id=product_id).first()
-        cart = Cart.objects.filter(user=user).first()
-        cart_item = CartItems.objects.filter(product=product, user=user).first()
-        if cart_item:
-            cart_item.quantity += quantity
-            cart_item.price = product.price * cart_item.quantity
-            cart_item.save()
-        else:
-            cart_item = CartItems(product=product, quantity=quantity, price=product.price*quantity, user=user)
-            cart_item.save()
-        cart.products.add(cart_item)
-        cart.save()
-        return Response({'success': 'added to cart'})
+    
     
     def delete(self, request):
         token = request.GET.get('jwt',None)
@@ -296,3 +271,33 @@ class bestsellerView(APIView):
             })
         return Response(data)
     
+class addtocartView(APIView):
+    permission_classes = []
+    authentication_classes = []
+    
+    def post(self, request):
+        token = request.GET.get('jwt',None)
+        if not token:
+            return Response({'error': 'not authenticated'})
+        try:
+            payload = jwt.decode(token, 'SECRET', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            return Response({'error': 'expired'})
+        except jwt.InvalidTokenError:
+            return Response({'error': 'invalid'})
+        user = User.objects.filter(id=payload['id']).first()
+        product_id = request.data.get('product_id')
+        quantity = request.data.get('quantity')
+        product = Product.objects.filter(id=product_id).first()
+        cart = Cart.objects.filter(user=user).first()
+        cart_item = CartItems.objects.filter(product=product, user=user).first()
+        if cart_item:
+            cart_item.quantity += quantity
+            cart_item.price = product.price * cart_item.quantity
+            cart_item.save()
+        else:
+            cart_item = CartItems(product=product, quantity=quantity, price=product.price*quantity, user=user)
+            cart_item.save()
+        cart.products.add(cart_item)
+        cart.save()
+        return Response({'success': 'added to cart'})
