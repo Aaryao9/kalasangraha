@@ -62,6 +62,7 @@ class CartItems(models.Model):
         return self.name    
     
     
+    
 
     
     
